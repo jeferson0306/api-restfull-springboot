@@ -1,12 +1,14 @@
 package com.api.restfull.apirestfullspringboot;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 
 public class CadastroPessoasTeste {
 
     @Test
+    @DisplayName("Deve criar o cadastro de pessoas")
     public void deveCriarCadastroDePessoas() {
 
         CadastroPessoas cadastro = new CadastroPessoas();
@@ -14,10 +16,12 @@ public class CadastroPessoasTeste {
         Assertions.assertThat(cadastro.getPessoas()).isEmpty();
     }
 
-    @Test(expected = PessoaSemNomeNotException.class)
+    @Test
+    @DisplayName("Deve adicionar uma pessoa")
     public void deveAdicionarUmaPessoa() {
         CadastroPessoas cadastroPessoas = new CadastroPessoas();
         Pessoa pessoa = new Pessoa();
+        pessoa.setNome("Wilson");
 
         cadastroPessoas.adicionar(pessoa);
 
@@ -27,14 +31,19 @@ public class CadastroPessoasTeste {
                 .contains(pessoa);
     }
 
-    @Test(expected = PessoaSemNomeNotException.class)
+    @Test
+    @DisplayName("Não deve adicionar pessoa com nome vazio")
     public void naoDeveAdicionarPessoaComNomeVazio() {
         CadastroPessoas cadastroPessoas = new CadastroPessoas();
         Pessoa pessoa = new Pessoa();
-        cadastroPessoas.adicionar(pessoa);
+
+        org.junit.jupiter.api.Assertions.assertThrows(PessoaSemNomeNotException.class, () ->
+                cadastroPessoas.adicionar(pessoa));
+
     }
 
     @Test
+    @DisplayName("Deve remover uma pessoa")
     public void deveRemoverUmaPessoa() {
 
         CadastroPessoas cadastroPessoas = new CadastroPessoas();
@@ -44,16 +53,20 @@ public class CadastroPessoasTeste {
         cadastroPessoas.adicionar(pessoa);
         cadastroPessoas.remover(pessoa);
 
+
         Assertions.assertThat(cadastroPessoas.getPessoas()
                 .isEmpty());
     }
 
-    @Test(expected = CadastroVazioException.class)
+    @Test
+    @DisplayName("Deve lançar erro ao tentar remover pessoa inexistente")
     public void deveLancarErroAoTentarRemoverPessoaInexistente() {
 
         CadastroPessoas cadastroPessoas = new CadastroPessoas();
         Pessoa pessoa = new Pessoa();
 
-        cadastroPessoas.remover(pessoa);
+        org.junit.jupiter.api.Assertions.assertThrows(CadastroVazioException.class, () ->
+                cadastroPessoas.remover(pessoa));
+
     }
 }
